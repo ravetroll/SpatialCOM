@@ -24,6 +24,7 @@ namespace SpatialCOM
         public void Initialize(double lat, double lon)
         {
             var b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
+            b.SetSrid(4326);
             b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.Point);
             b.BeginFigure(lat, lon);
             b.EndFigure();
