@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SpatialCOM
 {
+    [ComVisible(true)]   
+    [ClassInterface(ClassInterfaceType.None)]
+    [Guid("0C319EA8-BDC5-408C-A542-D483567DFD4D")]
     public class GeographyPoint : IGeographyPoint
     {
         private Microsoft.SqlServer.Types.SqlGeography p;
