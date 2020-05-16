@@ -25,10 +25,12 @@ namespace SpatialCOM
 
         public bool IsEmpty => p is null;
 
-        public void Initialize(double lat, double lon)
+        public int Srid => p is null ? 0 : p.STSrid.Value ;
+
+        public void Initialize(double lat, double lon, int srid = 4326)
         {
             var b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
-            b.SetSrid(4326);
+            b.SetSrid(srid);
             b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.Point);
             b.BeginFigure(lat, lon);
             b.EndFigure();

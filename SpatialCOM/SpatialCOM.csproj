@@ -51,7 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeographyLineString.cs" />
     <Compile Include="GeographyPoint.cs" />
+    <Compile Include="IGeographyLineString.cs" />
     <Compile Include="IGeographyPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

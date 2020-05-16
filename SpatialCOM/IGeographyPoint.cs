@@ -15,8 +15,10 @@ namespace SpatialCOM
 
         double Longitude { get; }
 
+        int Srid { get; }
+
         bool IsEmpty { get; }
 
-        void Initialize(double lat, double lon);
+        void Initialize(double lat, double lon, int srid = 4326);
     }
 }
