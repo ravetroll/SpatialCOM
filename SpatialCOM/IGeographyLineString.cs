@@ -11,10 +11,16 @@ namespace SpatialCOM
     [Guid("7D17B508-AB69-4526-A7F0-610200E4F46A")]
     public interface IGeographyLineString
     {
+        [DispId(2101)]
         bool IsEmpty { get; }
 
+        [DispId(2102)]
         void Initialize(GeographyPoint point1, GeographyPoint point2);
 
-        double Length();
+        [DispId(2103)]
+        double Length { get; }
+
+        [DispId(2104)]
+        string WKT { get; }
     }
 }

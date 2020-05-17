@@ -37,5 +37,21 @@ namespace SpatialCOM
             b.EndGeography();
             p = b.ConstructedGeography;
         }
+
+        public string WKT
+        {
+            get
+            {
+
+                if (IsEmpty)
+                {
+                    return "";
+                }
+                else
+                    return new String(p.STAsText().Value);
+            }
+        }
+
+        
     }
 }

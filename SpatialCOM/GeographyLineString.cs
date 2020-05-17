@@ -30,9 +30,30 @@ namespace SpatialCOM
             l = b.ConstructedGeography;
         }
 
-        public double Length()
-        {
-            return l.STLength().Value;
+        public double Length { get 
+            { 
+                if (IsEmpty)
+                {
+                    return 0d;
+                }
+                else
+                    return l.STLength().Value; 
+            } 
         }
+
+        public string WKT
+        {
+            get
+            {
+
+                if (IsEmpty)
+                {
+                    return "";
+                }
+                else
+                    return new String(l.STAsText().Value);
+            }
+        }
+        
     }
 }

@@ -16,7 +16,7 @@ namespace SpatialCOMTest
             p2.Initialize(1d, 3d);
             GeographyLineString l = new GeographyLineString();
             l.Initialize(p1, p2);
-            Assert.AreEqual(111302, l.Length(),1);
+            Assert.AreEqual(111302, l.Length,1);
         }
     }
 }

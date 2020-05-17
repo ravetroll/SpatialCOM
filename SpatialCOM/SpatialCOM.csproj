@@ -52,8 +52,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GeographyLineString.cs" />
+    <Compile Include="GeographyMultiLineString.cs" />
     <Compile Include="GeographyPoint.cs" />
     <Compile Include="IGeographyLineString.cs" />
+    <Compile Include="IGeographyMultiLineString.cs" />
     <Compile Include="IGeographyPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
