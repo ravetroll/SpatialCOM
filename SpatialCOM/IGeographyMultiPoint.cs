@@ -10,28 +10,27 @@ using System.Threading.Tasks;
 namespace SpatialCOM
 {
     [ComVisible(true)]
-    [Guid("2CB8CEB8-7326-45B4-AE4B-A287D8AC35B8")]
-    public interface IGeographyMultiLineString: IEnumerable
+    [Guid("0E86990D-11B7-47AB-8C29-3CE86383A622")]
+    public interface IGeographyMultiPoint: IEnumerable
     {
-        [DispId(2301)]
+        [DispId(2201)]
         bool IsEmpty { get; }
 
-        [DispId(2302)]
+        [DispId(2202)]
         new IEnumerator GetEnumerator();
 
-        [DispId(2303)]
-        void Add(GeographyLineString line);
+        [DispId(2203)]
+        void Add(GeographyPoint point);
 
-        [DispId(2304)]
+        [DispId(2204)]
         void Clear();
 
-        [DispId(2305)]
+        [DispId(2205)]
         int Srid { get; }
 
-        [DispId(2306)]
-        double Length { get; }
-
-        [DispId(2307)]
+        [DispId(2206)]
         string WKT { get; }
+
+
     }
 }

@@ -13,15 +13,15 @@ namespace SpatialCOM
 {
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("0D79C206-B4E0-4E89-A5F1-F609AE75F0D1")]
-    public class GeographyMultiLineString : IGeographyMultiLineString
+    [Guid("C2D00AFA-16F4-4AEB-A112-25BB068C80FE")]
+    public class GeographyMultiPoint : IGeographyMultiPoint
     {
 
-        private List<GeographyLineString> lines;
-        private Microsoft.SqlServer.Types.SqlGeography l;
+        private List<GeographyPoint> points;
+        private Microsoft.SqlServer.Types.SqlGeography p;
         private bool recalcNeeded;
 
-        public bool IsEmpty => lines.Count() == 0;
+        public bool IsEmpty => points.Count() == 0;
 
         public int Srid
         {
@@ -32,35 +32,35 @@ namespace SpatialCOM
                     return 0;
                 }
                 else
-                    return lines.First().Srid;
+                    return points.First().Srid;
             }
 
         }
 
-        public GeographyMultiLineString()
+        public GeographyMultiPoint()
         {
-            lines = new List<GeographyLineString>();
+            points = new List<GeographyPoint>();
             recalcNeeded = true;
         }
         public IEnumerator GetEnumerator()
         {
             
 
-            return lines.GetEnumerator();
+            return points.GetEnumerator();
         }
 
-        public void Add(GeographyLineString line)
+        public void Add(GeographyPoint point)
         {
-            if (line.Srid == this.Srid || this.Srid == 0)
+            if (point.Srid == this.Srid || this.Srid == 0)
             {
-                lines.Add(line);
+                points.Add(point);
                 recalcNeeded = true;
             }
         }
 
         public void Clear()
         {
-            lines.Clear();
+            points.Clear();
             recalcNeeded = true;
         }
 
@@ -68,13 +68,13 @@ namespace SpatialCOM
         {
             if (recalcNeeded)
             {
-                l = null;
+                p = null;
                 if (!IsEmpty)
                 {
-                    l = null;
-                    var buildString = String.Join(",", lines.Select(s => s.WKT));
+                    p = null;
+                    var buildString = String.Join(",", points.Select(s => s.WKT));
                     buildString = $"GEOMETRYCOLLECTION ({buildString})";                    
-                    l = Microsoft.SqlServer.Types.SqlGeography.STGeomCollFromText(new SqlChars(new SqlString(buildString)), this.Srid);
+                    p = Microsoft.SqlServer.Types.SqlGeography.STGeomCollFromText(new SqlChars(new SqlString(buildString)), this.Srid);
                     
                 }
             }
@@ -82,23 +82,23 @@ namespace SpatialCOM
 
         }
 
-        public double Length
-        {
-            get
-            {
-                Recalc();
-                return l.STLength().Value;
-            }
-        }
-
         public string WKT
         {
             get
             {
+
                 Recalc();
-                return new string(l.STAsText().Value);
+                if (IsEmpty)
+                {
+                    return "";
+                }
+                else
+                    return new String(p.STAsText().Value);
             }
         }
+
+
+
 
     }
 }

@@ -22,5 +22,8 @@ namespace SpatialCOM
 
         [DispId(2104)]
         string WKT { get; }
+
+        [DispId(2105)]
+        int Srid { get; }
     }
 }

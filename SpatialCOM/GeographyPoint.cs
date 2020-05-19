@@ -29,13 +29,16 @@ namespace SpatialCOM
 
         public void Initialize(double lat, double lon, int srid = 4326)
         {
-            var b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
-            b.SetSrid(srid);
-            b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.Point);
-            b.BeginFigure(lat, lon);
-            b.EndFigure();
-            b.EndGeography();
-            p = b.ConstructedGeography;
+            if (IsEmpty)
+            {
+                var b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
+                b.SetSrid(srid);
+                b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.Point);
+                b.BeginFigure(lat, lon);
+                b.EndFigure();
+                b.EndGeography();
+                p = b.ConstructedGeography;
+            }
         }
 
         public string WKT

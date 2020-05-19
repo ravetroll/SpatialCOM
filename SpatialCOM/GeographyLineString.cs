@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Types;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -16,18 +18,24 @@ namespace SpatialCOM
         
         private Microsoft.SqlServer.Types.SqlGeography l;
 
+        
+
         public bool IsEmpty => l is null;
 
         public void Initialize(GeographyPoint point1, GeographyPoint point2)
         {
-            var b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
-            b.SetSrid(point1.Srid);
-            b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.LineString);
-            b.BeginFigure(point1.Latitude, point1.Longitude);
-            b.AddLine(point2.Latitude, point2.Longitude);
-            b.EndFigure();
-            b.EndGeography();
-            l = b.ConstructedGeography;
+            if (IsEmpty)
+            {
+                var b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
+                b.SetSrid(point1.Srid);
+                b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.LineString);
+                b.BeginFigure(point1.Latitude, point1.Longitude);
+                b.AddLine(point2.Latitude, point2.Longitude);
+                b.EndFigure();
+                b.EndGeography();
+                l = b.ConstructedGeography;
+            }
+            
         }
 
         public double Length { get 
@@ -54,6 +62,18 @@ namespace SpatialCOM
                     return new String(l.STAsText().Value);
             }
         }
-        
+
+        public int Srid
+        {
+            get
+            {
+                if (IsEmpty)
+                {
+                    return 0;
+                }
+                else
+                    return l.STSrid.Value;
+            }
+        }
     }
 }
