@@ -18,9 +18,12 @@ namespace SpatialCOM
         bool IsEmpty { get; }
 
         [DispId(1101)]
-        double Area();
+        bool IsValid();
 
         [DispId(1102)]
+        double Area();
+
+        [DispId(1104)]
         double DistanceTo(IGeography geography);
 
     }

@@ -121,6 +121,20 @@ namespace SpatialCOM
                 return p.STDistance(geography.Geography).Value;
         }
 
+        public bool IsValid()
+        {
+
+            if (IsEmpty)
+            {
+                return false;
+            }
+            else
+            {
+                Recalc();
+                return p.STIsValid().Value;
+            }
+        }
+
 
     }
 }

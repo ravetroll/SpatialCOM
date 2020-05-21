@@ -82,6 +82,20 @@ namespace SpatialCOM
             }
         }
 
+        
+
+        public bool IsValid()
+        {
+           
+            if (IsEmpty)
+            {
+                return false;
+            }
+            else
+                return l.STIsValid().Value;
+            
+        }
+
         public double Area()
         {
             return 0d;

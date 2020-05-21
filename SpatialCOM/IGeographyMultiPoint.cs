@@ -38,6 +38,9 @@ namespace SpatialCOM
         [DispId(2208)]
         new double DistanceTo(IGeography geography);
 
+        [DispId(2209)]
+        new bool IsValid();
+
 
     }
 }

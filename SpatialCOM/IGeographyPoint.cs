@@ -44,5 +44,8 @@ namespace SpatialCOM
         [DispId(2010)]
         double M { get; }
 
+        [DispId(2011)]
+        new bool IsValid();
+
     }
 }

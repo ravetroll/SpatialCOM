@@ -91,7 +91,7 @@ namespace SpatialCOM
             {
                 var b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
                 b.SetSrid(srid);
-                b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.Point);                
+                b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.Point);                 
                 b.BeginFigure(lat, lon, _z, _m);
                 b.EndFigure();
                 b.EndGeography();
@@ -128,8 +128,22 @@ namespace SpatialCOM
             }
         }
 
+        public bool IsValid()
+        {
+
+            if (IsEmpty)
+            {
+                return false;
+            }
+            else
+            {
+                
+                return p.STIsValid().Value;
+            }
+        }
 
 
-        
+
+
     }
 }
