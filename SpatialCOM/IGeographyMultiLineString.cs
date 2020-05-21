@@ -11,13 +11,15 @@ namespace SpatialCOM
 {
     [ComVisible(true)]
     [Guid("2CB8CEB8-7326-45B4-AE4B-A287D8AC35B8")]
-    public interface IGeographyMultiLineString: IEnumerable
+    public interface IGeographyMultiLineString: IEnumerable, IGeography
     {
-        [DispId(2301)]
-        bool IsEmpty { get; }
+       
+
+        [DispId(-4)]
+        new IEnumerator GetEnumerator();
 
         [DispId(2302)]
-        new IEnumerator GetEnumerator();
+        new bool IsEmpty { get; }
 
         [DispId(2303)]
         void Add(GeographyLineString line);
@@ -33,5 +35,11 @@ namespace SpatialCOM
 
         [DispId(2307)]
         string WKT { get; }
+
+        [DispId(2308)]
+        new double Area();
+
+        [DispId(2309)]
+        new double DistanceTo(IGeography geography);
     }
 }

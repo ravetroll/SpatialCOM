@@ -18,7 +18,13 @@ namespace SpatialCOM
         
         private Microsoft.SqlServer.Types.SqlGeography l;
 
-        
+        public Microsoft.SqlServer.Types.SqlGeography Geography
+        {
+            get
+            {
+                return l;
+            }
+        }
 
         public bool IsEmpty => l is null;
 
@@ -74,6 +80,21 @@ namespace SpatialCOM
                 else
                     return l.STSrid.Value;
             }
+        }
+
+        public double Area()
+        {
+            return 0d;
+        }
+
+        public double DistanceTo(IGeography geography)
+        {
+            if (IsEmpty || geography.IsEmpty)
+            {
+                return -1d;
+            }
+            else
+                return l.STDistance(geography.Geography).Value;
         }
     }
 }

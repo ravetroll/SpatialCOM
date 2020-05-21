@@ -21,6 +21,15 @@ namespace SpatialCOM
         private Microsoft.SqlServer.Types.SqlGeography l;
         private bool recalcNeeded;
 
+        public Microsoft.SqlServer.Types.SqlGeography Geography
+        {
+            get
+            {
+                Recalc();
+                return l;
+            }
+        }
+
         public bool IsEmpty => lines.Count() == 0;
 
         public int Srid
@@ -87,7 +96,7 @@ namespace SpatialCOM
             get
             {
                 Recalc();
-                return l.STLength().Value;
+                return l == null ? 0d : l.STLength().Value;
             }
         }
 
@@ -96,8 +105,23 @@ namespace SpatialCOM
             get
             {
                 Recalc();
-                return new string(l.STAsText().Value);
+                return l == null ? "" : new string(l.STAsText().Value);
             }
+        }
+
+        public double Area()
+        {
+            return 0d;
+        }
+
+        public double DistanceTo(IGeography geography)
+        {
+            if (IsEmpty || geography.IsEmpty)
+            {
+                return -1d;
+            }
+            else
+                return l.STDistance(geography.Geography).Value;
         }
 
     }

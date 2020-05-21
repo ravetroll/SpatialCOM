@@ -11,13 +11,14 @@ namespace SpatialCOM
 {
     [ComVisible(true)]
     [Guid("0E86990D-11B7-47AB-8C29-3CE86383A622")]
-    public interface IGeographyMultiPoint: IEnumerable
+    public interface IGeographyMultiPoint: IEnumerable, IGeography
     {
-        [DispId(2201)]
-        bool IsEmpty { get; }
+       
+        [DispId(-4)]
+        new IEnumerator GetEnumerator();
 
         [DispId(2202)]
-        new IEnumerator GetEnumerator();
+        new bool IsEmpty { get; }
 
         [DispId(2203)]
         void Add(GeographyPoint point);
@@ -30,6 +31,12 @@ namespace SpatialCOM
 
         [DispId(2206)]
         string WKT { get; }
+
+        [DispId(2207)]
+        new double Area();
+
+        [DispId(2208)]
+        new double DistanceTo(IGeography geography);
 
 
     }

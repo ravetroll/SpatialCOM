@@ -55,6 +55,7 @@
     <Compile Include="GeographyMultiPoint.cs" />
     <Compile Include="GeographyMultiLineString.cs" />
     <Compile Include="GeographyPoint.cs" />
+    <Compile Include="IGeography.cs" />
     <Compile Include="IGeographyLineString.cs" />
     <Compile Include="IGeographyMultiPoint.cs" />
     <Compile Include="IGeographyMultiLineString.cs" />
