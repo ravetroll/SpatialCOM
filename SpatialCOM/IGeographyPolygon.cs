@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,107 +8,110 @@ using System.Threading.Tasks;
 namespace SpatialCOM
 {
     [ComVisible(true)]
-    [Guid("0E86990D-11B7-47AB-8C29-3CE86383A622")]
-    public interface IGeographyMultiPoint: IEnumerable, IGeography
+    [Guid("C6A70B04-ACB8-42ED-A15C-0D2DC6EEAE59")]
+    public interface IGeographyPolygon: IGeography
     {
-       
-        [DispId(-4)]
-        new IEnumerator GetEnumerator();
 
-        [DispId(2202)]
-        new bool STIsEmpty();
-
-        [DispId(2203)]
-        bool Add(IGeographyPoint point);
-
-        [DispId(2204)]
-        void Clear();
-
-        [DispId(2205)]
+        [DispId(2401)]
         new int STSrid { get; }
 
-        [DispId(2206)]
+        [DispId(2402)]
+        new bool STIsEmpty();
+
+        [DispId(2403)]
+        bool InitializeFromPoints(GeographyMultiPoint points);
+
+        [DispId(2404)]
+        bool InitializeFromLine(GeographyLineString lines);
+
+        [DispId(2405)]
         new string STAsText();
 
-        [DispId(2207)]
+        [DispId(2406)]
         new double STArea();
 
-        [DispId(2208)]
-        new double STDistance(IGeography geography);
+        [DispId(2407)]
+        new double STDistance(IGeography geography);        
 
-        [DispId(2209)]
+        [DispId(2408)]
         new bool STIsValid();
 
-        [DispId(2210)]
+        [DispId(2409)]
         new string STGeometryType();
 
-        [DispId(2211)]
+        [DispId(2410)]
+        bool AddInnerFromPoints(GeographyMultiPoint points);
+
+        [DispId(2411)]
+        bool AddInnerFromLine(GeographyLineString line);
+
+        [DispId(2412)]
         new string Name { get; set; }
 
-        [DispId(2212)]
+        [DispId(2413)]
         new string Description { get; set; }
 
-        [DispId(2213)]
+        [DispId(2414)]
         new IGeography STBuffer(double distance);
 
-        [DispId(2214)]
+        [DispId(2415)]
         new bool STContains(IGeography geog);
 
-        [DispId(2215)]
+        [DispId(2416)]
         new IGeography STConvexHull();
 
-        [DispId(2216)]
+        [DispId(2417)]
         new IGeography STDifference(IGeography geog);
 
-        [DispId(2217)]
+        [DispId(2418)]
         new int STDimension();
 
-        [DispId(2218)]
+        [DispId(2419)]
         new bool STDisjoint(IGeography geog);
 
-        [DispId(2219)]
+        [DispId(2420)]
         new IGeographyPoint STEndPoint();
 
-        [DispId(2220)]
+        [DispId(2421)]
         new bool STEquals(IGeography geog);
 
-        [DispId(2221)]
+        [DispId(2422)]
         new IGeography STGeometryN(int number);
 
-        [DispId(2222)]
+        [DispId(2423)]
         new IGeography STIntersection(IGeography geog);
 
-        [DispId(2223)]
+        [DispId(2424)]
         new bool STIntersects(IGeography geog);
 
-        [DispId(2224)]
+        [DispId(2425)]
         new bool STIsClosed();
 
-        [DispId(2225)]
+        [DispId(2426)]
         new double STLength();
 
-        [DispId(2226)]
+        [DispId(2427)]
         new int STNumGeometries();
 
-        [DispId(2227)]
+        [DispId(2428)]
         new int STNumPoints();
 
-        [DispId(2228)]
+        [DispId(2429)]
         new bool STOverlaps(IGeography geog);
 
-        [DispId(2229)]
+        [DispId(2430)]
         new IGeographyPoint STPointN(int number);
 
-        [DispId(2230)]
+        [DispId(2431)]
         new IGeographyPoint STStartPoint();
 
-        [DispId(2231)]
+        [DispId(2432)]
         new IGeography STSymDifference(IGeography geog);
 
-        [DispId(2232)]
+        [DispId(2433)]
         new IGeography STUnion(IGeography geog);
 
-        [DispId(2233)]
+        [DispId(2434)]
         new bool STWithin(IGeography geog);
     }
 }

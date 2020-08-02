@@ -17,7 +17,7 @@ namespace SpatialCOM
     public class GeographyMultiLineString : IGeographyMultiLineString
     {
 
-        private List<GeographyLineString> lines;
+        private List<IGeographyLineString> lines;
         private Microsoft.SqlServer.Types.SqlGeography l;
         private bool recalcNeeded;
 
@@ -28,27 +28,40 @@ namespace SpatialCOM
                 Recalc();
                 return l;
             }
+            set
+            {
+                if (value.STGeometryType() == "MultiLineString")
+                {
+                    lines = new List<IGeographyLineString>();
+                    for (int count = 0; count < value.STNumGeometries();count++)
+                    {
+                        var line = (IGeographyLineString)Internal.SQLToGeography.LoadSqlGeography(value.STGeometryN(count));
+                        lines.Add(line);
+
+                    }
+                    recalcNeeded = true;
+                }
+            }
         }
 
-        public bool IsEmpty => lines.Count() == 0;
+        public bool STIsEmpty() => lines.Count() == 0;
 
-        public int Srid
+        public int STSrid
         {
             get
             {
-                if (IsEmpty)
-                {
-                    return 0;
-                }
-                else
-                    return lines.First().Srid;
+                Recalc();
+                return l.STSrid.Value;
             }
 
         }
 
+        public string Name { get; set; }
+        public string Description { get; set; }
+
         public GeographyMultiLineString()
         {
-            lines = new List<GeographyLineString>();
+            lines = new List<IGeographyLineString>();
             recalcNeeded = true;
         }
         public IEnumerator GetEnumerator()
@@ -58,13 +71,12 @@ namespace SpatialCOM
             return lines.GetEnumerator();
         }
 
-        public void Add(GeographyLineString line)
+        public bool Add(IGeographyLineString line)
         {
-            if (line.Srid == this.Srid || this.Srid == 0)
-            {
-                lines.Add(line);
-                recalcNeeded = true;
-            }
+           
+            lines.Add(line);
+            recalcNeeded = true;
+            return true;
         }
 
         public void Clear()
@@ -78,64 +90,206 @@ namespace SpatialCOM
             if (recalcNeeded)
             {
                 l = null;
-                if (!IsEmpty)
+                if (!STIsEmpty())
                 {
                     l = null;
-                    var buildString = String.Join(",", lines.Select(s => s.WKT));
-                    buildString = $"GEOMETRYCOLLECTION ({buildString})";                    
-                    l = Microsoft.SqlServer.Types.SqlGeography.STGeomCollFromText(new SqlChars(new SqlString(buildString)), this.Srid);
-                    
+                    Microsoft.SqlServer.Types.SqlGeographyBuilder b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
+                    b.SetSrid(lines.First().STSrid);
+                    b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.MultiLineString);                    
+                    foreach (GeographyLineString line in lines)
+                    {
+                        b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.LineString);
+                        b.BeginFigure(line.FirstPoint.Latitude,line.FirstPoint.Longitude, line.FirstPoint.Z == double.MinValue ? (double?)null : line.FirstPoint.Z, line.FirstPoint.M == double.MinValue ? (double?)null : line.FirstPoint.M);
+                        foreach (GeographyPoint p in line.Points.Skip(1))
+                        {
+                            b.AddLine(p.Latitude, p.Longitude, p.Z == double.MinValue ? (double?)null : p.Z, p.M == double.MinValue ? (double?)null : p.M);
+                        }
+                        b.EndFigure();
+                        b.EndGeography();
+                    }
+                    b.EndGeography();
+                    l = b.ConstructedGeography;
+
                 }
             }
             recalcNeeded = false;
 
         }
 
-        public double Length
+        public double STLength()
         {
-            get
-            {
+           
                 Recalc();
-                return l == null ? 0d : l.STLength().Value;
-            }
+                return l.STLength().Value;
+           
         }
 
-        public string WKT
+        public string STAsText()
         {
-            get
-            {
+            
                 Recalc();
-                return l == null ? "" : new string(l.STAsText().Value);
-            }
+                return new string(l.STAsText().Value);
+           
         }
 
-        public double Area()
+        public double STArea()
         {
             return 0d;
         }
 
-        public double DistanceTo(IGeography geography)
+        public double STDistance(IGeography geography)
         {
-            if (IsEmpty || geography.IsEmpty)
+            Recalc();
+            if (STIsEmpty() || geography.STIsEmpty())
             {
-                return -1d;
+                return 0d;
             }
             else
                 return l.STDistance(geography.Geography).Value;
         }
 
-        public bool IsValid()
+        public bool STIsValid()
         {
             
-            if (IsEmpty)
-            {
-                return false;
-            }
-            else
-            {
-                Recalc();
-                return l.STIsValid().Value;
-            }
+           
+            Recalc();
+            return l.STIsValid().Value;
+           
+        }
+
+        public string STGeometryType()
+        {
+            Recalc();
+            return l.STGeometryType().Value;
+        }
+
+        public IGeography STBuffer(double distance)
+        {
+            Recalc();
+            var buffered = l.STBuffer(distance);
+            return Internal.SQLToGeography.LoadSqlGeography(buffered);
+        }
+
+        public bool STContains(IGeography geog)
+        {
+            Recalc();
+            return l.STContains(geog.Geography).Value;
+        }
+
+        public IGeography STConvexHull()
+        {
+            Recalc();
+            return Internal.SQLToGeography.LoadSqlGeography(l.STConvexHull());
+        }
+
+        public IGeography STDifference(IGeography geog)
+        {
+            Recalc();
+            var difference = l.STDifference(geog.Geography);
+            return Internal.SQLToGeography.LoadSqlGeography(difference);
+        }
+
+        public int STDimension()
+        {
+            Recalc();
+            return l.STDimension().Value;
+        }
+
+        public bool STDisjoint(IGeography geog)
+        {
+            Recalc();
+            return l.STDisjoint(geog.Geography).Value;
+        }
+
+        public IGeographyPoint STEndPoint()
+        {
+            Recalc();
+            var ep = l.STEndPoint();
+            return (IGeographyPoint)(ep == null ? null : Internal.SQLToGeography.LoadSqlGeography(ep));
+        }
+
+        public bool STEquals(IGeography geog)
+        {
+            Recalc();
+            return l.STEquals(geog.Geography).Value;
+        }
+
+        public IGeography STGeometryN(int number)
+        {
+            Recalc();
+            var buffered = l.STGeometryN(number);
+            return Internal.SQLToGeography.LoadSqlGeography(buffered);
+        }
+
+        public IGeography STIntersection(IGeography geog)
+        {
+            Recalc();
+            var difference = l.STIntersection(geog.Geography);
+            return Internal.SQLToGeography.LoadSqlGeography(difference);
+        }
+
+        public bool STIntersects(IGeography geog)
+        {
+            Recalc();
+            return l.STIntersects(geog.Geography).Value;
+        }
+
+        public bool STIsClosed()
+        {
+            Recalc();
+            return l.STIsClosed().Value;
+        }
+
+        public int STNumGeometries()
+        {
+            Recalc();
+            return l.STNumGeometries().Value;
+        }
+
+        public int STNumPoints()
+        {
+            Recalc();
+            return l.STNumPoints().Value;
+        }
+
+        public bool STOverlaps(IGeography geog)
+        {
+            Recalc();
+            return l.STOverlaps(geog.Geography).Value;
+        }
+
+        public IGeographyPoint STPointN(int number)
+        {
+            Recalc();
+            var point = l.STPointN(number);
+            return (IGeographyPoint)Internal.SQLToGeography.LoadSqlGeography(point);
+        }
+
+        public IGeographyPoint STStartPoint()
+        {
+            Recalc();
+            var ep = l.STStartPoint();
+            return (IGeographyPoint)(ep == null ? null : Internal.SQLToGeography.LoadSqlGeography(ep));
+        }
+
+        public IGeography STSymDifference(IGeography geog)
+        {
+            Recalc();
+            var difference = l.STSymDifference(geog.Geography);
+            return Internal.SQLToGeography.LoadSqlGeography(difference);
+        }
+
+        public IGeography STUnion(IGeography geog)
+        {
+            Recalc();
+            var difference = l.STUnion(geog.Geography);
+            return Internal.SQLToGeography.LoadSqlGeography(difference);
+        }
+
+        public bool STWithin(IGeography geog)
+        {
+            Recalc();
+            return l.STWithin(geog.Geography).Value;
         }
     }
 }

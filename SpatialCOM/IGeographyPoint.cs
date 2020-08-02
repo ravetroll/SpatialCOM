@@ -21,22 +21,22 @@ namespace SpatialCOM
         double Longitude { get; }
 
         [DispId(2003)]
-        int Srid { get; }
+        new int STSrid { get; }
 
         [DispId(2004)]
-        new bool IsEmpty { get; }
+        new bool STIsEmpty();
 
         [DispId(2005)]
         void Initialize(double lat, double lon, double z = double.MinValue, double m = double.MinValue, int srid = 4326);
 
         [DispId(2006)]
-        string WKT { get; }
+        new string STAsText();
 
         [DispId(2007)]
-        new double Area();
+        new double STArea();
 
         [DispId(2008)]
-        new double DistanceTo(IGeography geography);
+        new double STDistance(IGeography geography);
 
         [DispId(2009)]
         double Z { get; }
@@ -45,7 +45,79 @@ namespace SpatialCOM
         double M { get; }
 
         [DispId(2011)]
-        new bool IsValid();
+        new bool STIsValid();
+
+        [DispId(2012)]
+        new string STGeometryType();
+
+        [DispId(2013)]
+        new string Name { get; set; }
+
+        [DispId(2014)]
+        new string Description { get; set; }
+
+        [DispId(2015)]
+        new IGeography STBuffer(double distance);
+
+        [DispId(2016)]
+        new bool STContains(IGeography geog);
+
+        [DispId(2017)]
+        new IGeography STConvexHull();
+
+        [DispId(2018)]
+        new IGeography STDifference(IGeography geog);
+
+        [DispId(2019)]
+        new int STDimension();
+
+        [DispId(2020)]
+        new bool STDisjoint(IGeography geog);
+
+        [DispId(2021)]
+        new IGeographyPoint STEndPoint();
+
+        [DispId(2022)]
+        new bool STEquals(IGeography geog);
+
+        [DispId(2023)]
+        new IGeography STGeometryN(int number);
+
+        [DispId(2024)]
+        new IGeography STIntersection(IGeography geog);
+
+        [DispId(2025)]
+        new bool STIntersects(IGeography geog);
+
+        [DispId(2026)]
+        new bool STIsClosed();
+
+        [DispId(2027)]
+        new double STLength();
+
+        [DispId(2028)]
+        new int STNumGeometries();
+
+        [DispId(2029)]
+        new int STNumPoints();
+
+        [DispId(2030)]
+        new bool STOverlaps(IGeography geog);
+
+        [DispId(2031)]
+        new IGeographyPoint STPointN(int number);
+
+        [DispId(2032)]
+        new IGeographyPoint STStartPoint();
+
+        [DispId(2033)]
+        new IGeography STSymDifference(IGeography geog);
+
+        [DispId(2034)]
+        new IGeography STUnion(IGeography geog);
+
+        [DispId(2035)]
+        new bool STWithin(IGeography geog);
 
     }
 }

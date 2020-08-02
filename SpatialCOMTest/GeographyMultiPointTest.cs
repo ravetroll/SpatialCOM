@@ -24,8 +24,8 @@ namespace SpatialCOMTest
             gp.Add(p2);
             gp.Add(p3);
             gp.Add(p4);
-            Assert.AreEqual("GEOMETRYCOLLECTION (POINT (2 1), POINT (3 1), POINT (2 3), POINT (3 4))", gp.WKT);
-            
+            Assert.AreEqual("MULTIPOINT ((2 1), (3 1), (2 3), (3 4))", gp.STAsText());
+            Assert.AreEqual("MultiPoint", gp.STGeometryType());
 
 
         }

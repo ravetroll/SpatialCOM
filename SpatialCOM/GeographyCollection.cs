@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Types;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -13,9 +12,10 @@ namespace SpatialCOM
 {
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("C2D00AFA-16F4-4AEB-A112-25BB068C80FE")]
-    public class GeographyMultiPoint : IGeographyMultiPoint
+    [Guid("1BA4AD10-0789-4E56-9AD2-3E8B04B6BAF2")]
+    public class GeographyCollection : IGeographyCollection
     {
+        private List<IGeography> geogs;
         private Microsoft.SqlServer.Types.SqlGeography p;
         private bool recalcNeeded;
 
@@ -28,22 +28,33 @@ namespace SpatialCOM
             }
             set
             {
-                if (value.STGeometryType() == "MultiPoint")
+                if (value.STGeometryType() == "GeometryCollection")
                 {
-                    Points = new List<IGeographyPoint>();
-                    for (int count = 0; count < value.STNumPoints().Value; count++)
+                    List<IGeography> geogList = new List<IGeography>();
+                    for (int count = 0; count < value.STNumGeometries(); count++)
                     {
-                        IGeographyPoint point = (IGeographyPoint)Internal.SQLToGeography.LoadSqlGeography(value.STPointN(count));
-                        Points.Add(point);
+                        var sqlgeog = value.STGeometryN(count);
+                        var igeog = Internal.SQLToGeography.LoadSqlGeography(sqlgeog);
+                        if (igeog != null)
+                        {
+                            geogList.Add(igeog);
+                        }
                     }
+                    geogs = geogList;
                     recalcNeeded = true;
                 }
             }
         }
 
-        public List<IGeographyPoint> Points { get; private set; }
+        public List<IGeography> Geographies
+        {
+            get
+            {
+                return geogs;
+            }
+        }
 
-        public bool STIsEmpty() => Points.Count() == 0;
+        public bool STIsEmpty() => geogs.Count() == 0;
 
         public int STSrid
         {
@@ -54,7 +65,7 @@ namespace SpatialCOM
                     return 0;
                 }
                 else
-                    return Points.First().STSrid;
+                    return geogs.First().STSrid;
             }
 
         }
@@ -62,56 +73,56 @@ namespace SpatialCOM
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public GeographyMultiPoint()
+        public GeographyCollection()
         {
-            Points = new List<IGeographyPoint>();
+            geogs = new List<IGeography>();
             Microsoft.SqlServer.Types.SqlGeographyBuilder b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
             b.SetSrid(4326);
-            b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.MultiPoint);
+            b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.GeometryCollection);
             b.EndGeography();
             p = b.ConstructedGeography;
             recalcNeeded = true;
         }
         public IEnumerator GetEnumerator()
         {
-            
 
-            return Points.GetEnumerator();
+
+            return geogs.GetEnumerator();
         }
 
-        public bool Add(IGeographyPoint point)
+        public bool Add(IGeography geog)
         {
-            
-            Points.Add(point);
-            recalcNeeded = true;
-            return true;
+
+            if (geog.STGeometryType() != "GeometryCollection")
+            {
+                geogs.Add(geog);
+                recalcNeeded = true;
+                return true;
+            }
+            return false;
+
         }
 
         public void Clear()
         {
-            Points.Clear();
+            geogs.Clear();
             recalcNeeded = true;
         }
 
         private void Recalc()
         {
+            
             if (recalcNeeded)
             {
                 p = null;
                 if (!STIsEmpty())
                 {
-                    Microsoft.SqlServer.Types.SqlGeographyBuilder b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
-                    b.SetSrid(Points.First().STSrid);
-                    b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.MultiPoint);                    
-                    foreach (GeographyPoint point in Points)
+                    List<string> WKTList = new List<string>();                    
+                    foreach (IGeography geog in geogs)
                     {
-                        b.BeginGeography(Microsoft.SqlServer.Types.OpenGisGeographyType.Point);
-                        b.BeginFigure(point.Latitude, point.Longitude, point.Z == double.MinValue ? (double?)null : point.Z, point.M == double.MinValue ? (double?)null : point.M);
-                        b.EndFigure();
-                        b.EndGeography();
+                        WKTList.Add(geog.STAsText());
                     }
-                    b.EndGeography();
-                    p = b.ConstructedGeography;
+                    p = SqlGeography.STGeomCollFromText(new SqlChars("GEOMETRYCOLLECTION (" + string.Join(", ", WKTList) + ")"), geogs.First().STSrid) ;
                 }
             }
             recalcNeeded = false;
@@ -120,15 +131,16 @@ namespace SpatialCOM
 
         public string STAsText()
         {
-            
-            Recalc();                
+
+            Recalc();
             return new String(p.STAsText().Value);
-           
+
         }
 
         public double STArea()
         {
-            return 0d;
+            Recalc();
+            return p.STArea().Value;
         }
 
         public double STDistance(IGeography geography)
@@ -145,13 +157,19 @@ namespace SpatialCOM
         public bool STIsValid()
         {
 
-            
+
             Recalc();
             return p.STIsValid().Value;
-            
+
         }
 
         public string STGeometryType() => p.STGeometryType().Value;
+
+        public double STLength()
+        {
+            Recalc();
+            return p.STLength().Value;
+        }
 
         public IGeography STBuffer(double distance)
         {
@@ -228,12 +246,6 @@ namespace SpatialCOM
         {
             Recalc();
             return p.STIsClosed().Value;
-        }
-
-        public double STLength()
-        {
-            Recalc();
-            return p.STLength().Value;
         }
 
         public int STNumGeometries()

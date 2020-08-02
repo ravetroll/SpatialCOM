@@ -41,8 +41,12 @@
     <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
+    <Reference Include="SharpKml.Core, Version=5.1.1.0, Culture=neutral, PublicKeyToken=9bb853c026a5c0ac, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpKml.Core.5.1.1\lib\net45\SharpKml.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,18 +55,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeographyCollection.cs" />
     <Compile Include="GeographyLineString.cs" />
+    <Compile Include="GeographyMultiPolygon.cs" />
     <Compile Include="GeographyMultiPoint.cs" />
     <Compile Include="GeographyMultiLineString.cs" />
     <Compile Include="GeographyPoint.cs" />
+    <Compile Include="GeographyPolygon.cs" />
     <Compile Include="IGeography.cs" />
+    <Compile Include="IGeographyCollection.cs" />
     <Compile Include="IGeographyLineString.cs" />
+    <Compile Include="IGeographyMultiPolygon.cs" />
     <Compile Include="IGeographyMultiPoint.cs" />
     <Compile Include="IGeographyMultiLineString.cs" />
     <Compile Include="IGeographyPoint.cs" />
+    <Compile Include="IGeographyPolygon.cs" />
+    <Compile Include="Internal\KMLToGeography.cs" />
+    <Compile Include="Internal\SQLToGeography.cs" />
+    <Compile Include="KMLReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +86,7 @@
     <EmbeddedResource Include="costura32\msvcr120.dll" />
     <EmbeddedResource Include="costura32\SqlServerSpatial140.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.6.0.0\build\Fody.targets" Condition="Exists('..\packages\Fody.6.0.0\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

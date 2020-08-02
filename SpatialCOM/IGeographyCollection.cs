@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,107 +9,108 @@ using System.Threading.Tasks;
 namespace SpatialCOM
 {
     [ComVisible(true)]
-    [Guid("0E86990D-11B7-47AB-8C29-3CE86383A622")]
-    public interface IGeographyMultiPoint: IEnumerable, IGeography
+    [Guid("02D57424-2D6B-4B44-ACB5-5B3550E2CE0F")]
+    public interface IGeographyCollection: IEnumerable, IGeography
     {
-       
         [DispId(-4)]
         new IEnumerator GetEnumerator();
 
-        [DispId(2202)]
+        [DispId(2502)]
         new bool STIsEmpty();
 
-        [DispId(2203)]
-        bool Add(IGeographyPoint point);
+        [DispId(2503)]
+        bool Add(IGeography geog);
 
-        [DispId(2204)]
+        [DispId(2504)]
         void Clear();
 
-        [DispId(2205)]
+        [DispId(2505)]
         new int STSrid { get; }
 
-        [DispId(2206)]
-        new string STAsText();
-
-        [DispId(2207)]
-        new double STArea();
-
-        [DispId(2208)]
-        new double STDistance(IGeography geography);
-
-        [DispId(2209)]
-        new bool STIsValid();
-
-        [DispId(2210)]
-        new string STGeometryType();
-
-        [DispId(2211)]
-        new string Name { get; set; }
-
-        [DispId(2212)]
-        new string Description { get; set; }
-
-        [DispId(2213)]
-        new IGeography STBuffer(double distance);
-
-        [DispId(2214)]
-        new bool STContains(IGeography geog);
-
-        [DispId(2215)]
-        new IGeography STConvexHull();
-
-        [DispId(2216)]
-        new IGeography STDifference(IGeography geog);
-
-        [DispId(2217)]
-        new int STDimension();
-
-        [DispId(2218)]
-        new bool STDisjoint(IGeography geog);
-
-        [DispId(2219)]
-        new IGeographyPoint STEndPoint();
-
-        [DispId(2220)]
-        new bool STEquals(IGeography geog);
-
-        [DispId(2221)]
-        new IGeography STGeometryN(int number);
-
-        [DispId(2222)]
-        new IGeography STIntersection(IGeography geog);
-
-        [DispId(2223)]
-        new bool STIntersects(IGeography geog);
-
-        [DispId(2224)]
-        new bool STIsClosed();
-
-        [DispId(2225)]
+        [DispId(2506)]
         new double STLength();
 
-        [DispId(2226)]
+        [DispId(2507)]
+        new string STAsText();
+
+        [DispId(2508)]
+        new double STArea();
+
+        [DispId(2509)]
+        new double STDistance(IGeography geography);
+
+        [DispId(2510)]
+        new bool STIsValid();
+
+        [DispId(2511)]
+        new string STGeometryType();
+
+        [DispId(2512)]
+        new string Name { get; set; }
+
+        [DispId(2513)]
+        new string Description { get; set; }
+
+        [DispId(2514)]
+        new IGeography STBuffer(double distance);
+
+        [DispId(2515)]
+        new bool STContains(IGeography geog);
+
+        [DispId(2516)]
+        new IGeography STConvexHull();
+
+        [DispId(2517)]
+        new IGeography STDifference(IGeography geog);
+
+        [DispId(2518)]
+        new int STDimension();
+
+        [DispId(2519)]
+        new bool STDisjoint(IGeography geog);
+
+        [DispId(2520)]
+        new IGeographyPoint STEndPoint();
+
+        [DispId(2521)]
+        new bool STEquals(IGeography geog);
+
+        [DispId(2522)]
+        new IGeography STGeometryN(int number);
+
+        [DispId(2523)]
+        new IGeography STIntersection(IGeography geog);
+
+        [DispId(2524)]
+        new bool STIntersects(IGeography geog);
+
+        [DispId(2525)]
+        new bool STIsClosed();
+
+        [DispId(2526)]
         new int STNumGeometries();
 
-        [DispId(2227)]
+        [DispId(2527)]
         new int STNumPoints();
 
-        [DispId(2228)]
+        [DispId(2528)]
         new bool STOverlaps(IGeography geog);
 
-        [DispId(2229)]
+        [DispId(2529)]
         new IGeographyPoint STPointN(int number);
 
-        [DispId(2230)]
+        [DispId(2530)]
         new IGeographyPoint STStartPoint();
 
-        [DispId(2231)]
+        [DispId(2531)]
         new IGeography STSymDifference(IGeography geog);
 
-        [DispId(2232)]
+        [DispId(2532)]
         new IGeography STUnion(IGeography geog);
 
-        [DispId(2233)]
+        [DispId(2533)]
         new bool STWithin(IGeography geog);
+
+
     }
 }
