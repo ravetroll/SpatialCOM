@@ -14,6 +14,8 @@ namespace SpatialCOM
     public class GeographyPoint : IGeographyPoint
     {
         private Microsoft.SqlServer.Types.SqlGeography p;
+        private string name = "";
+        private string description = "";
         public GeographyPoint()
         {
             var b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
@@ -92,8 +94,8 @@ namespace SpatialCOM
 
         public int STSrid => p.STSrid.Value;
 
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get { return name ?? ""; } set { name = value; } }
+        public string Description { get { return description ?? ""; } set { description = value; } }
         public bool STIsEmpty()  => p.STIsEmpty().Value; 
 
         

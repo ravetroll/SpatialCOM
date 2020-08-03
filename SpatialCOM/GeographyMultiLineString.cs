@@ -13,13 +13,15 @@ namespace SpatialCOM
 {
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    [Guid("0D79C206-B4E0-4E89-A5F1-F609AE75F0D1")]
+    [Guid("7C63039E-3A5D-431A-8DCF-D0CB13A7F248")]
     public class GeographyMultiLineString : IGeographyMultiLineString
     {
 
         private List<IGeographyLineString> lines;
         private Microsoft.SqlServer.Types.SqlGeography l;
         private bool recalcNeeded;
+        private string name = "";
+        private string description = "";
 
         public Microsoft.SqlServer.Types.SqlGeography Geography
         {
@@ -56,8 +58,8 @@ namespace SpatialCOM
 
         }
 
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get { return name ?? ""; } set { name = value; } }
+        public string Description { get { return description ?? ""; } set { description = value; } }
 
         public GeographyMultiLineString()
         {

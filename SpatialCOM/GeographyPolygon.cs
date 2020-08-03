@@ -17,6 +17,8 @@ namespace SpatialCOM
         private Microsoft.SqlServer.Types.SqlGeography p;        
         private GeographyLineString outerPoints;
         private List<GeographyLineString> innerPolys;
+        private string name = "";
+        private string description = "";
 
 
         public GeographyPolygon()
@@ -58,8 +60,8 @@ namespace SpatialCOM
 
         public int STSrid => p.STSrid.Value;
 
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get { return name ?? ""; } set { name = value; } }
+        public string Description { get { return description ?? ""; } set { description = value; } }
 
         public bool STIsEmpty() { return p.STIsEmpty().Value; }
 

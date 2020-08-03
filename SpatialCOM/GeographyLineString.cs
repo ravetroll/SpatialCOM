@@ -14,6 +14,9 @@ namespace SpatialCOM
     [Guid("A9BD1E0A-E8CF-43ED-8380-0774D32409D5")]
     public class GeographyLineString : IGeographyLineString
     {
+
+        private string name = "";
+        private string description = "";
         public GeographyLineString() 
         {
             var b = new Microsoft.SqlServer.Types.SqlGeographyBuilder();
@@ -40,7 +43,7 @@ namespace SpatialCOM
                 if (value.STGeometryType() == "LineString")
                 {
                     GeographyMultiPoint points = new GeographyMultiPoint();
-                    for (int count = 0; count < value.STNumPoints().Value;count++)
+                    for (int count = 1; count < value.STNumPoints().Value + 1;count++)
                     {
                         var p = new GeographyPoint();
                         p.Geography = value.STPointN(count);
@@ -63,8 +66,8 @@ namespace SpatialCOM
 
         public int STSrid => l.STSrid.Value;
 
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get { return name ?? ""; } set { name = value; } }
+        public string Description { get { return description ?? ""; } set { description = value; } }
 
         public IGeographyPoint FirstPoint => _linePoints.FirstOrDefault();
 

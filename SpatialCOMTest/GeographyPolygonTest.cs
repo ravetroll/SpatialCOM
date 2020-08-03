@@ -52,6 +52,9 @@ namespace SpatialCOMTest
             pg.InitializeFromPoints(gp);
             Assert.AreEqual(true, pg.STIsValid());
             Assert.AreEqual(123090704, pg.STArea(),1d);
+            GeographyPolygon pgbuffered = (GeographyPolygon)pg.STBuffer(1000);
+            Assert.AreEqual(184235008.801918, pgbuffered.STArea(),1d);
+
         }
     }
 }

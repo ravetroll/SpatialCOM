@@ -18,6 +18,8 @@ namespace SpatialCOM
     {
         private Microsoft.SqlServer.Types.SqlGeography p;
         private bool recalcNeeded;
+        private string name = "";
+        private string description = "";
 
         public Microsoft.SqlServer.Types.SqlGeography Geography
         {
@@ -59,8 +61,8 @@ namespace SpatialCOM
 
         }
 
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Name { get { return name ?? ""; } set { name = value; } }
+        public string Description { get { return description ?? ""; } set { description = value; } }
 
         public GeographyMultiPoint()
         {
